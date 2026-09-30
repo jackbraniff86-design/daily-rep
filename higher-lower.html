@@ -1,0 +1,365 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Higher or Lower · The Daily Rep</title>
+<meta name="description" content="Ten cards. Every day. Trust your gut.">
+<meta property="og:title" content="Higher or Lower · The Daily Rep">
+<meta property="og:description" content="Ten cards. Every day. Trust your gut.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=DM+Mono:wght@300;400;500&display=swap">
+<style>
+/* Same look as The Daily Rep quiz: typewriter type on a cool Nordic ground, hairlines, square corners. Fjord blue is the accent; green and red are for right and wrong only. */
+:root{
+  --bg:#edf0f2; --card:#f7f9fa; --ink:#1b2229; --muted:#6a7681; --line:#cfd7dd;
+  --accent:#2f5d8a; --good:#3f8f72; --bad:#c0564b;
+  --f:"DM Mono",ui-monospace,"SF Mono",Menlo,monospace;
+}
+@media (prefers-color-scheme:dark){ :root:not([data-theme="light"]){
+  --bg:#11161b; --card:#182028; --ink:#e4eaee; --muted:#85929e; --line:#28323c;
+  --accent:#8fb6dc; --good:#5fc49c; --bad:#e6796d;
+}}
+:root[data-theme="dark"]{
+  --bg:#11161b; --card:#182028; --ink:#e4eaee; --muted:#85929e; --line:#28323c;
+  --accent:#8fb6dc; --good:#5fc49c; --bad:#e6796d;
+}
+*,*::before,*::after{box-sizing:border-box}
+html,body{margin:0;min-height:100%}
+body{background:var(--bg);color:var(--ink);font-family:var(--f);font-size:15px;line-height:1.55;letter-spacing:-.01em;-webkit-text-size-adjust:100%;-webkit-font-smoothing:antialiased;transition:background .3s ease,color .3s ease}
+#app{max-width:540px;margin:0 auto;min-height:100dvh;display:flex;flex-direction:column;gap:18px;
+  padding:max(16px,env(safe-area-inset-top)) max(18px,env(safe-area-inset-right)) max(22px,env(safe-area-inset-bottom)) max(18px,env(safe-area-inset-left))}
+.home,.q{animation:rise .4s cubic-bezier(.2,.7,.2,1) both}
+@keyframes rise{from{opacity:0;transform:translateY(8px)}}
+.top{display:flex;justify-content:space-between;align-items:center;gap:12px}
+.logo{font-weight:500;font-size:15px;letter-spacing:-.02em;text-transform:lowercase;background:none;border:0;color:var(--ink);padding:0;cursor:pointer}
+.logo i,h1 i{font-style:normal;color:var(--accent)}
+.tools{display:flex;gap:6px}
+button{font:inherit;cursor:pointer;color:inherit;letter-spacing:inherit}
+.mini{background:transparent;border:1px solid var(--line);border-radius:4px;padding:5px 10px;font-size:11px;letter-spacing:.12em;text-transform:uppercase;color:var(--muted);text-decoration:none;transition:border-color .2s,color .2s}
+.mini:hover{border-color:var(--ink);color:var(--ink)}
+.btn{display:block;width:100%;background:var(--ink);color:var(--bg);border:1px solid var(--ink);border-radius:4px;padding:17px 10px;font-weight:500;font-size:13px;letter-spacing:.1em;text-transform:uppercase;transition:opacity .2s,transform .15s}
+.btn:hover{opacity:.88} .btn:active{transform:scale(.99)}
+.btn:disabled{opacity:.3;cursor:default}
+.btn:focus-visible,.mini:focus-visible,.logo:focus-visible{outline:2px solid var(--accent);outline-offset:3px}
+.pair{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+h1{font-weight:500;font-size:clamp(34px,10.5vw,58px);line-height:1;letter-spacing:-.06em;text-transform:lowercase;margin:0}
+.caret{display:inline-block;width:.5em;height:.82em;margin-left:.08em;background:var(--accent);animation:blink 1.1s steps(1) infinite}
+@keyframes blink{50%{opacity:0}}
+h2{font-weight:500;font-size:clamp(19px,5.2vw,23px);line-height:1.3;letter-spacing:-.03em;margin:0;text-wrap:balance}
+.lede{color:var(--muted);margin:0}
+.eyebrow{font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.home{flex:1;display:flex;flex-direction:column;justify-content:center;gap:20px}
+.facts{display:grid;grid-template-columns:repeat(3,1fr);gap:8px}
+.facts.two{grid-template-columns:repeat(2,1fr)}
+.fact{border:1px solid var(--line);border-radius:4px;padding:12px}
+.fact b{display:block;font-size:20px;font-weight:500;font-variant-numeric:tabular-nums}
+.fact span{font-size:11px;color:var(--muted)}
+.hero{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.hero b{font-weight:500;font-size:clamp(40px,12vw,58px);line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.hero span{color:var(--muted);font-size:13px}
+.hero.streak b{color:var(--accent)}
+.dots{display:flex;gap:4px}
+.dots i{flex:1;height:3px;background:var(--line);transition:background .3s}
+.dots i.on{background:var(--ink)} .dots i.g{background:var(--good)} .dots i.b{background:var(--bad)}
+.q{display:flex;flex-direction:column;gap:16px;flex:1}
+.qhead{display:flex;justify-content:space-between;align-items:baseline;gap:12px}
+.clock{font-size:13px;font-variant-numeric:tabular-nums}
+.clock.low{color:var(--bad)}
+.timer{height:2px;background:var(--line);margin-top:-8px}
+.timer i{display:block;height:100%;width:100%;background:var(--ink);transition:width .12s linear}
+.timer.low i{background:var(--bad)}
+.hcard{background:var(--card);border:1px solid var(--line);border-radius:6px;padding:16px;display:flex;flex-direction:column;gap:4px;transition:border-color .3s}
+.hcard .val{font-weight:500;font-size:clamp(38px,11vw,52px);line-height:1.1;letter-spacing:-.05em;font-variant-numeric:tabular-nums}
+.hcard .val small{font-size:14px;color:var(--muted);font-weight:400;letter-spacing:0;margin-left:6px}
+.hcard .note{font-size:12px;color:var(--muted);margin:0}
+.hcard.ask .val{color:var(--accent)}
+.hcard.g{border-color:var(--good)} .hcard.g .val{color:var(--good)}
+.hcard.b{border-color:var(--bad)} .hcard.b .val{color:var(--bad)}
+.ask-q{margin:0;font-size:16px;line-height:1.45;min-height:2.9em;text-wrap:balance}
+.ask-q b{font-weight:500;color:var(--accent)}
+.ask-q.g{color:var(--good);font-weight:500} .ask-q.b{color:var(--bad);font-weight:500}
+.spacer{flex:1}
+.score{font-weight:500;font-size:clamp(52px,16vw,78px);line-height:1;letter-spacing:-.06em;font-variant-numeric:tabular-nums}
+.score small{font-size:.3em;color:var(--muted);letter-spacing:0}
+.squares{font-size:22px;letter-spacing:2px}
+.rows{display:flex;flex-direction:column;gap:4px}
+.row{display:flex;gap:10px;align-items:baseline;border-bottom:1px solid var(--line);padding:6px 0;font-size:13px}
+.row .t{flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row b{font-weight:500;font-variant-numeric:tabular-nums}
+.row .m{width:1.4em} .row .m.g{color:var(--good)} .row .m.b{color:var(--bad)}
+.hint{font-size:12px;color:var(--muted);margin:0;text-align:center}
+.legal{font-size:11px;color:var(--muted);text-align:center;margin:0}
+.legal a{color:var(--ink)}
+@media (prefers-reduced-motion:reduce){.timer i{transition:none}.home,.q,.caret{animation:none}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+
+<script>
+(() => {
+'use strict';
+const CONFIG = {
+  name: 'Higher or Lower',
+  launch: '2026-09-30',     // the date of day #1
+  url: '',                  // shown in the share text once the site has a home
+  rounds: 10,
+  seconds: 8,               // time allowed per card
+};
+
+// ---------- decks ----------
+// One deck a day, so every card in a round is in the same unit. A card is a thing and a number.
+// tag is shown above the name; note is the small print. check:true marks a figure that still needs confirming.
+const DECKS = [
+  {id:'kcal', name:'Calories', unit:'kcal', hi:'More calories', lo:'Fewer calories', btn:['More','Fewer'], ask:(b,a)=>`Does <b>${b}</b> have more or fewer calories than <b>${a}</b>?`, cards:[
+    {n:'Big Mac', v:493, tag:'eaten', note:'UK menu'},
+    {n:'McDonald’s cheeseburger', v:298, tag:'eaten', note:'UK menu'},
+    {n:'McDonald’s medium fries', v:337, tag:'eaten', note:'UK menu'},
+    {n:'Mars bar', v:228, tag:'eaten', note:'51 g bar'},
+    {n:'Can of Coca-Cola', v:139, tag:'drunk', note:'330 ml'},
+    {n:'Pint of Guinness', v:210, tag:'drunk'},
+    {n:'Banana', v:105, tag:'eaten', note:'medium'},
+    {n:'Large egg', v:78, tag:'eaten'},
+    {n:'Whole avocado', v:240, tag:'eaten', note:'medium'},
+    {n:'Krispy Kreme Original Glazed', v:195, tag:'eaten'},
+    {n:'Greggs sausage roll', v:329, tag:'eaten'},
+    {n:'Tablespoon of olive oil', v:119, tag:'eaten'},
+    {n:'Chicken breast', v:165, tag:'eaten', note:'100 g, cooked'},
+    {n:'Tin of baked beans', v:328, tag:'eaten', note:'whole 415 g tin'},
+    {n:'Energy gel', v:100, tag:'eaten', note:'typical'},
+    {n:'Grande latte', v:190, tag:'drunk', note:'semi-skimmed milk'},
+    {n:'5 km run', v:350, tag:'burned', note:'70 kg runner'},
+    {n:'10 km run', v:700, tag:'burned', note:'70 kg runner'},
+    {n:'Half marathon', v:1480, tag:'burned', note:'70 kg runner'},
+    {n:'Marathon', v:2950, tag:'burned', note:'70 kg runner'},
+    {n:'10,000 steps', v:400, tag:'burned', note:'70 kg walker, roughly', check:true},
+    {n:'An hour of steady cycling', v:560, tag:'burned', note:'70 kg rider'},
+    {n:'An hour of yoga', v:175, tag:'burned', note:'70 kg'},
+    {n:'An hour of swimming lengths', v:400, tag:'burned', note:'70 kg, moderate'},
+    {n:'30 minutes hard on the rower', v:300, tag:'burned', note:'70 kg'},
+    {n:'Eight hours of sleep', v:530, tag:'burned', note:'70 kg'},
+    {n:'An hour sat at a desk', v:90, tag:'burned', note:'70 kg'},
+    {n:'A full HYROX race', v:1000, tag:'burned', note:'75 kg athlete, 90 minutes, roughly', check:true},
+    {n:'A day at rest', v:1600, tag:'burned', note:'resting metabolic rate, 70 kg man'},
+    {n:'A Tour de France mountain stage', v:6000, tag:'burned', note:'per rider, roughly'},
+    {n:'An Ironman', v:9000, tag:'burned', note:'roughly', check:true},
+    {n:'One kilogram of body fat', v:7700, tag:'stored'},
+    {n:'Full glycogen stores', v:2000, tag:'stored', note:'muscle and liver'},
+    {n:'NHS daily guideline for a man', v:2500, tag:'eaten'},
+  ]},
+  {id:'kg', name:'Weight', unit:'kg', hi:'Heavier', lo:'Lighter', btn:['Heavier','Lighter'], ask:(b,a)=>`Is <b>${b}</b> heavier or lighter than <b>${a}</b>?`, cards:[
+    {n:'Sled push, men’s Open', v:152, tag:'hyrox', note:'including the sled'},
+    {n:'Sled push, women’s Open', v:102, tag:'hyrox', note:'including the sled'},
+    {n:'Sled push, men’s Pro', v:202, tag:'hyrox', note:'including the sled'},
+    {n:'Sled pull, women’s Open', v:78, tag:'hyrox', note:'including the sled'},
+    {n:'Farmers carry, men’s Open', v:48, tag:'hyrox', note:'both kettlebells'},
+    {n:'Farmers carry, men’s Pro', v:64, tag:'hyrox', note:'both kettlebells'},
+    {n:'Sandbag, men’s Open lunges', v:20, tag:'hyrox'},
+    {n:'Sandbag, men’s Pro lunges', v:30, tag:'hyrox'},
+    {n:'Wall ball, men’s Open', v:6, tag:'hyrox'},
+    {n:'Wall ball, men’s Pro', v:9, tag:'hyrox'},
+    {n:'Wall ball, women’s Open', v:4, tag:'hyrox'},
+    {n:'Women’s Olympic barbell', v:15, tag:'gym'},
+    {n:'One pood kettlebell', v:16, tag:'gym'},
+    {n:'Concept2 rowing machine', v:26, tag:'gym'},
+    {n:'Eddie Hall’s deadlift', v:500, tag:'record', note:'2016'},
+    {n:'Julius Maddox’s bench press', v:355, tag:'record', note:'2021'},
+    {n:'Lasha Talakhadze’s clean and jerk', v:267, tag:'record', note:'2021'},
+    {n:'Lasha Talakhadze’s snatch', v:225, tag:'record', note:'2021'},
+    {n:'Concert grand piano', v:480, tag:'thing', note:'Steinway Model D'},
+    {n:'Average British man', v:85, tag:'thing'},
+    {n:'Average British woman', v:72, tag:'thing'},
+    {n:'Newborn baby', v:3.4, tag:'thing', note:'UK average'},
+    {n:'Bag of cement', v:25, tag:'thing'},
+    {n:'Silverback gorilla', v:160, tag:'animal', note:'typical adult male'},
+    {n:'Male lion', v:190, tag:'animal', note:'typical'},
+    {n:'Male polar bear', v:450, tag:'animal', note:'typical'},
+    {n:'Giant panda', v:100, tag:'animal', note:'typical adult'},
+    {n:'Dairy cow', v:680, tag:'animal', note:'typical Holstein'},
+    {n:'Labrador', v:32, tag:'animal', note:'adult male'},
+    {n:'Gold bar', v:12.4, tag:'thing', note:'standard 400 oz bar'},
+    {n:'Men’s shot put', v:7.26, tag:'thing'},
+    {n:'Lightest bike allowed in the Tour de France', v:6.8, tag:'thing'},
+  ]},
+];
+
+// ---------- helpers ----------
+const $ = (sel,root=document) => root.querySelector(sel);
+const app = $('#app');
+const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
+const pad = n => String(n).padStart(2,'0');
+const reduce = matchMedia('(prefers-reduced-motion: reduce)').matches;
+function hash(str){ let h=1779033703^str.length;
+  for(let i=0;i<str.length;i++){ h=Math.imul(h^str.charCodeAt(i),3432918353); h=h<<13|h>>>19; }
+  h=Math.imul(h^h>>>16,2246822507); h=Math.imul(h^h>>>13,3266489909); return (h^h>>>16)>>>0; }
+function mulberry32(a){ return () => { a|=0; a=a+0x6D2B79F5|0; let t=Math.imul(a^a>>>15,1|a);
+  t=t+Math.imul(t^t>>>7,61|t)^t; return ((t^t>>>14)>>>0)/4294967296; }; }
+function shuffle(arr,rng){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ const j=Math.floor(rng()*(i+1)); [a[i],a[j]]=[a[j],a[i]]; } return a; }
+const dstr = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
+const today = () => Math.round((Date.parse(dstr(new Date())+'T00:00:00Z') - Date.parse(CONFIG.launch+'T00:00:00Z'))/864e5)+1;
+const decimals = v => (String(v).split('.')[1]||'').length;
+const fmt = (v,dp=decimals(v)) => Number(v).toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp});
+
+// ---------- the daily chain ----------
+// pickDaily(day) → the deck of the day and the same 11 cards for everyone: the first is shown, then ten higher-or-lower calls.
+// Neighbours are kept close enough to argue over (12% to 2.6× apart) and are never equal.
+function pickDaily(day){
+  const deck = DECKS[(day-1)%DECKS.length], pool = shuffle(deck.cards, mulberry32(hash('hl-'+day))), chain=[pool.shift()];
+  while(chain.length < CONFIG.rounds+1){
+    const prev=chain[chain.length-1]; let idx=-1;
+    for(const [lo,hi] of [[1.12,2.6],[1.05,5],[1.0001,1e9]]){
+      idx = pool.findIndex(c=>{ const r=Math.max(c.v,prev.v)/Math.min(c.v,prev.v); return r>=lo && r<=hi; });
+      if(idx>=0) break;
+    }
+    chain.push(pool.splice(idx,1)[0]);
+  }
+  return {deck, chain};
+}
+window.HigherLower = {pickDaily, DECKS};   // for tests
+
+// ---------- saved state ----------
+const KEY='dailyRep.higherLower.v1';
+let data = {days:{}, last:0, streak:0, maxStreak:0, theme:''};
+try{ Object.assign(data, JSON.parse(localStorage.getItem(KEY))||{}); }catch(e){}
+try{ data.theme = data.theme || (JSON.parse(localStorage.getItem('dailyRep.v1'))||{}).theme || ''; }catch(e){}
+const save = () => { try{ localStorage.setItem(KEY, JSON.stringify(data)); }catch(e){} };
+const streakNow = () => (data.last===today() || data.last===today()-1) ? data.streak : 0;
+function applyTheme(){ if(data.theme) document.documentElement.dataset.theme=data.theme; else delete document.documentElement.dataset.theme; }
+applyTheme();
+const title = n => n>=10 ? 'Flawless' : n>=8 ? 'Sharp' : n>=6 ? 'Decent instincts' : n>=4 ? 'Coin flip' : 'Should have flipped a coin';
+const bestRun = g => g.reduce((o,x)=>{ o.cur = x ? o.cur+1 : 0; o.best=Math.max(o.best,o.cur); return o; }, {cur:0,best:0}).best;
+
+// ---------- screens ----------
+let session=null, tick=null, qTimer=null, advance=null;
+function shell(inner, dots){
+  clearInterval(tick); clearInterval(qTimer); clearTimeout(advance);
+  app.innerHTML = `<div class="top"><button class="logo" id="home">higher or <i>lower</i></button>
+    <div class="tools"><a class="mini" href="index.html">Quiz</a><button class="mini" id="theme" aria-label="Switch light or dark theme">◐</button></div></div>
+    ${dots ? `<div class="dots">${dots}</div>` : ''}${inner}`;
+  $('#home').addEventListener('click', home);
+  $('#theme').addEventListener('click', ()=>{ const dark = data.theme ? data.theme==='dark' : matchMedia('(prefers-color-scheme: dark)').matches;
+    data.theme = dark ? 'light' : 'dark'; save(); applyTheme(); });
+  window.scrollTo(0,0);
+}
+function countdown(id){
+  const upd=()=>{ const el=$('#'+id); if(!el) return clearInterval(tick); const mid=new Date(); mid.setHours(24,0,0,0); const s=Math.max(0,Math.round((mid-Date.now())/1000));
+    el.textContent=`${pad(Math.floor(s/3600))}:${pad(Math.floor(s%3600/60))}:${pad(s%60)}`; };
+  upd(); tick=setInterval(upd,1000);
+}
+function home(){
+  session=null; const n=today(), day=data.days[n], done=day&&day.done, right=done?day.g.filter(Boolean).length:0, st=streakNow(), {deck}=pickDaily(n);
+  const label=new Date().toLocaleDateString(undefined,{weekday:'long',day:'numeric',month:'long'});
+  shell(`<div class="home">
+    <div class="eyebrow">#${n} · ${esc(label)} · today: ${esc(deck.name)}</div>
+    <h1>higher or <i>lower</i><span class="caret" aria-hidden="true"></span></h1>
+    <p class="lede">Ten cards a day. Each one: is it more or less than the last? Trust your gut.</p>
+    ${done ? `<div class="hero"><b>${right}/${CONFIG.rounds}</b><span>today · ${title(right)}</span></div>` : ''}
+    <div class="hero streak"><b>🔥 ${st}</b><span>${st ? `day streak${done ? '' : '. Play today to keep it going.'}` : 'day streak. Start one today.'}</span></div>
+    <div class="facts two">
+      <div class="fact"><b id="cd">--:--:--</b><span>to the next ten</span></div>
+      <div class="fact"><b>${data.maxStreak}</b><span>longest streak</span></div>
+    </div>
+    <button class="btn" id="play">${done ? 'See results' : day ? 'Carry on' : "Play today's ten"}</button>
+    <p class="legal">${CONFIG.seconds} seconds a card. Figures are typical values. Independent game, not affiliated with HYROX or any brand named.</p>
+  </div>`);
+  $('#play').addEventListener('click', ()=>start(n));
+  countdown('cd');
+}
+function start(n, preview){
+  const saved = preview ? null : data.days[n];
+  session = {n, ...pickDaily(n), g: saved ? saved.g.slice() : [], preview:!!preview};
+  if(saved && saved.done) return results();
+  card();
+}
+const dots = () => Array.from({length:CONFIG.rounds},(_,i)=> `<i class="${i<session.g.length ? (session.g[i]?'g':'b') : i===session.g.length ? 'on' : ''}"></i>`).join('');
+function cardHtml(c, cls, shown){
+  return `<div class="hcard ${cls}"><span class="eyebrow">${esc(c.tag||'')}</span><h2>${esc(c.n)}</h2>
+    <div class="val"><span class="num">${shown ? fmt(c.v) : '?'}</span><small>${esc(session.deck.unit)}</small></div>${c.note ? `<p class="note">${esc(c.note)}</p>` : ''}</div>`;
+}
+function card(){
+  const i=session.g.length, a=session.chain[i], b=session.chain[i+1];
+  // the clock runs on wall time and is saved, so reloading does not reset it
+  const store = session.preview ? session : (data.days[session.n] = data.days[session.n] || {g:[], done:false});
+  if(store.ti!==i){ store.ti=i; store.t0=Date.now(); if(!session.preview) save(); }
+  shell(`<div class="q"><div class="qhead"><span class="eyebrow">Card ${i+1} of ${CONFIG.rounds} · ${esc(session.deck.name)}</span><span class="clock" id="clock" aria-label="Time left"></span></div>
+    <div class="timer" id="timer"><i></i></div>
+    ${cardHtml(a,'ref',true)}
+    <p class="ask-q" id="vs" aria-live="polite">${session.deck.ask(esc(b.n), esc(a.n))}</p>
+    ${cardHtml(b,'ask',false)}
+    <div class="spacer"></div>
+    <div class="pair"><button class="btn" id="hi">▲ ${esc(session.deck.btn[0])}</button><button class="btn" id="lo">▼ ${esc(session.deck.btn[1])}</button></div></div>`, dots());
+  const clock=$('#clock'), bar=$('#timer'); let answered=false;
+  const answer = guess => {
+    if(answered) return; answered=true; clearInterval(qTimer);
+    const right = guess!==null && (guess==='hi') === (b.v>a.v);
+    session.g.push(right);
+    if(!session.preview){ Object.assign(data.days[session.n], {g:session.g}); save(); }
+    $('#hi').disabled = $('#lo').disabled = true;
+    const ask=app.querySelector('.hcard.ask'), num=$('.num',ask), vs=$('#vs'), dp=decimals(b.v);
+    const finish = () => { num.textContent=fmt(b.v); ask.classList.add(right?'g':'b'); vs.className='ask-q '+(right?'g':'b'); const truth=(b.v>a.v ? session.deck.hi : session.deck.lo).toLowerCase();
+      vs.textContent = guess===null ? `Out of time. The answer was: ${truth}.` : right ? `Correct: ${truth}.` : `Wrong. The answer was: ${truth}.`;
+      advance=setTimeout(()=> session.g.length>=CONFIG.rounds ? finishDay() : card(), 1300); };
+    if(reduce) return finish();
+    const t0=performance.now(), iv=setInterval(()=>{ const k=Math.min(1,(performance.now()-t0)/650); num.textContent=fmt(b.v*k,dp); if(k>=1){ clearInterval(iv); finish(); } },30);
+  };
+  $('#hi').addEventListener('click', ()=>answer('hi'));
+  $('#lo').addEventListener('click', ()=>answer('lo'));
+  const upd = () => { const left=CONFIG.seconds-(Date.now()-store.t0)/1000;
+    if(left<=0) return answer(null);
+    clock.textContent=`0:${pad(Math.ceil(left))}`; bar.firstElementChild.style.width=`${left/CONFIG.seconds*100}%`;
+    clock.classList.toggle('low',left<=3); bar.classList.toggle('low',left<=3); };
+  upd(); if(!answered) qTimer=setInterval(upd,100);
+}
+function finishDay(){
+  if(!session.preview){ const n=session.n; data.days[n].done=true;
+    if(data.last!==n){ data.streak = data.last===n-1 ? data.streak+1 : 1; data.last=n; data.maxStreak=Math.max(data.maxStreak,data.streak); }
+    save(); }
+  results();
+}
+function shareText(){
+  const right=session.g.filter(Boolean).length, st=streakNow();
+  return [`${CONFIG.name} #${session.n} · ${right}/${CONFIG.rounds} · ${title(right)}`,
+    session.g.map(x=>x?'🟩':'🟥').join('')+` · best run ${bestRun(session.g)}`+(st>1?` · 🔥 ${st}`:''),
+    CONFIG.url || (/^https?:/.test(location.protocol)&&!/^(localhost|127\.)/.test(location.hostname) ? location.host+location.pathname : '')].filter(Boolean).join('\n');
+}
+function results(){
+  const right=session.g.filter(Boolean).length;
+  shell(`<div class="q">
+    <div class="eyebrow">#${session.n} · ${esc(session.deck.name)} · ${session.preview ? 'preview, not saved' : 'today’s result'}</div>
+    <div class="score">${right}<small> / ${CONFIG.rounds}</small></div>
+    <h2>${title(right)}</h2>
+    <div class="squares" aria-label="Result by card">${session.g.map(x=>x?'🟩':'🟥').join('')}</div>
+    <div class="facts">
+      <div class="fact"><b>${bestRun(session.g)}</b><span>best run</span></div>
+      <div class="fact"><b>${streakNow()}</b><span>day streak</span></div>
+      <div class="fact"><b id="cd">--:--:--</b><span>to the next ten</span></div>
+    </div>
+    <div class="rows">${session.chain.map((c,i)=>`<div class="row"><span class="m ${i===0?'':session.g[i-1]?'g':'b'}">${i===0?'·':session.g[i-1]?'✓':'✗'}</span><span class="t">${esc(c.n)}</span><b>${fmt(c.v)} ${esc(session.deck.unit)}</b></div>`).join('')}</div>
+    <div class="spacer"></div>
+    <button class="btn" id="share">Share result</button><p class="hint" id="shareMsg" aria-live="polite"></p></div>`, dots());
+  $('#share').addEventListener('click', async ()=>{ const t=shareText(), msg=$('#shareMsg');
+    if(navigator.share && matchMedia('(pointer:coarse)').matches){ try{ await navigator.share({text:t}); return; }catch(e){ if(e && e.name==='AbortError') return; } }
+    try{ await navigator.clipboard.writeText(t); msg.textContent='Copied to clipboard'; }catch(e){ msg.textContent=t; msg.style.whiteSpace='pre-line'; } });
+  countdown('cd');
+}
+// ?cards lists every card for fact-checking.
+function cards(){
+  shell(`<div class="q">${DECKS.map(d=>`<h2>${esc(d.name)} · ${d.cards.length} cards</h2><div class="rows">${d.cards.slice().sort((x,y)=>x.v-y.v).map(c=>
+    `<div class="row"><span class="m ${c.check?'b':''}">${c.check?'!':''}</span><span class="t">${esc(c.n)}${c.note?` (${esc(c.note)})`:''}</span><b>${fmt(c.v)} ${esc(d.unit)}</b></div>`).join('')}</div>`).join('')}
+    <p class="hint">! marks a figure that still needs confirming.</p></div>`);
+}
+addEventListener('keydown', e=>{ if(e.code==='ArrowUp' && $('#hi')){ e.preventDefault(); $('#hi').click(); } if(e.code==='ArrowDown' && $('#lo')){ e.preventDefault(); $('#lo').click(); } });
+
+// ---------- start ----------
+// ?cards lists the decks and ?day=N previews a day without saving. Both only work on your own machine.
+const local = location.protocol==='file:' || /^(localhost|127\.0\.0\.1)$/.test(location.hostname);
+const params=new URLSearchParams(local ? location.search : '');
+if(params.has('cards')) cards();
+else if(params.get('day')) start(Math.max(1,Number(params.get('day'))||1), true);
+else home();
+})();
+</script>
+</body>
+</html>
