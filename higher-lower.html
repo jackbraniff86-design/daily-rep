@@ -113,7 +113,7 @@ const CONFIG = {
 // One deck a day, so every card in a round is in the same unit. A card is a thing and a number.
 // tag is shown above the name; note is the small print. check:true marks a figure that still needs confirming.
 const DECKS = [
-  {id:'kcal', name:'Calories', unit:'kcal', hi:'More calories', lo:'Fewer calories', btn:['More','Fewer'], ask:(b,a)=>`Does <b>${b}</b> have more or fewer calories than <b>${a}</b>?`, cards:[
+  {id:'kcal', name:'Calories', unit:'kcal', hi:'More calories', lo:'Fewer calories', btn:['More','Fewer'], ask:(b,a)=>`Is <b>${b}</b> more or fewer calories than <b>${a}</b>?`, cards:[
     {n:'Big Mac', v:493, tag:'eaten', note:'UK menu'},
     {n:'McDonald’s cheeseburger', v:298, tag:'eaten', note:'UK menu'},
     {n:'McDonald’s medium fries', v:337, tag:'eaten', note:'UK menu'},
@@ -148,6 +148,43 @@ const DECKS = [
     {n:'One kilogram of body fat', v:7700, tag:'stored'},
     {n:'Full glycogen stores', v:2000, tag:'stored', note:'muscle and liver'},
     {n:'NHS daily guideline for a man', v:2500, tag:'eaten'},
+    {n:'NHS daily guideline for a woman', v:2000, tag:'eaten'},
+    {n:'Slice of white bread', v:95, tag:'eaten', note:'medium slice'},
+    {n:'Tablespoon of peanut butter', v:95, tag:'eaten'},
+    {n:'Snickers bar', v:245, tag:'eaten', note:'48 g bar'},
+    {n:'Four-finger KitKat', v:209, tag:'eaten'},
+    {n:'Cadbury Creme Egg', v:177, tag:'eaten'},
+    {n:'Jaffa Cake', v:46, tag:'eaten', note:'one'},
+    {n:'Digestive biscuit', v:71, tag:'eaten', note:'one, plain'},
+    {n:'Oreo', v:53, tag:'eaten', note:'one'},
+    {n:'Ferrero Rocher', v:73, tag:'eaten', note:'one'},
+    {n:'Bag of ready salted crisps', v:130, tag:'eaten', note:'25 g bag'},
+    {n:'Six Chicken McNuggets', v:261, tag:'eaten', note:'UK menu'},
+    {n:'McDonald’s large fries', v:444, tag:'eaten', note:'UK menu'},
+    {n:'Two Weetabix', v:136, tag:'eaten', note:'no milk'},
+    {n:'Bowl of porridge', v:150, tag:'eaten', note:'40 g oats, made with water'},
+    {n:'Cheddar cheese', v:416, tag:'eaten', note:'100 g'},
+    {n:'Almonds', v:579, tag:'eaten', note:'100 g'},
+    {n:'Salmon fillet', v:206, tag:'eaten', note:'100 g, cooked'},
+    {n:'Cooked white rice', v:130, tag:'eaten', note:'100 g'},
+    {n:'Knob of butter', v:74, tag:'eaten', note:'10 g'},
+    {n:'Protein shake', v:120, tag:'drunk', note:'one scoop of whey in water'},
+    {n:'Pint of lager', v:182, tag:'drunk', note:'4%'},
+    {n:'Pint of cider', v:216, tag:'drunk', note:'4.5%'},
+    {n:'Glass of wine', v:133, tag:'drunk', note:'175 ml, 12%'},
+    {n:'Shot of spirits', v:61, tag:'drunk', note:'25 ml, 40%'},
+    {n:'Can of Red Bull', v:115, tag:'drunk', note:'250 ml'},
+    {n:'Pint of whole milk', v:365, tag:'drunk'},
+    {n:'Bottle of Lucozade Sport', v:140, tag:'drunk', note:'500 ml'},
+    {n:'100 km ultramarathon', v:7000, tag:'burned', note:'70 kg runner'},
+    {n:'Marathon', v:3800, tag:'burned', note:'90 kg runner'},
+    {n:'An hour walking the dog', v:210, tag:'burned', note:'70 kg, easy pace'},
+    {n:'An hour of gardening', v:270, tag:'burned', note:'70 kg'},
+    {n:'An hour of housework', v:230, tag:'burned', note:'70 kg'},
+    {n:'Ten minutes of skipping', v:135, tag:'burned', note:'70 kg'},
+    {n:'An hour of weight training', v:300, tag:'burned', note:'70 kg, roughly', check:true},
+    {n:'A round of golf on foot', v:1200, tag:'burned', note:'70 kg, four hours, roughly', check:true},
+    {n:'Your brain, per day', v:330, tag:'burned', note:'about a fifth of resting energy', check:true},
   ]},
   {id:'kg', name:'Weight', unit:'kg', hi:'Heavier', lo:'Lighter', btn:['Heavier','Lighter'], ask:(b,a)=>`Is <b>${b}</b> heavier or lighter than <b>${a}</b>?`, cards:[
     {n:'Sled push, men’s Open', v:152, tag:'hyrox', note:'including the sled'},
@@ -182,6 +219,40 @@ const DECKS = [
     {n:'Gold bar', v:12.4, tag:'thing', note:'standard 400 oz bar'},
     {n:'Men’s shot put', v:7.26, tag:'thing'},
     {n:'Lightest bike allowed in the Tour de France', v:6.8, tag:'thing'},
+    {n:'Sled pull, men’s Open', v:103, tag:'hyrox', note:'including the sled'},
+    {n:'Sled pull, men’s Pro', v:153, tag:'hyrox', note:'including the sled'},
+    {n:'Farmers carry, women’s Open', v:32, tag:'hyrox', note:'both kettlebells'},
+    {n:'Sandbag, women’s Open lunges', v:10, tag:'hyrox'},
+    {n:'Men’s Olympic barbell', v:20, tag:'gym'},
+    {n:'Hafþór Björnsson’s deadlift', v:501, tag:'record', note:'2020'},
+    {n:'Ray Williams’s raw squat', v:490, tag:'record', note:'2019'},
+    {n:'Li Wenwen’s clean and jerk', v:187, tag:'record', note:'2021'},
+    {n:'Tom Stoltman’s atlas stone', v:286, tag:'record', note:'2020'},
+    {n:'Tamara Walcott’s deadlift', v:290, tag:'record', note:'2022', check:true},
+    {n:'Eliud Kipchoge', v:52, tag:'athlete'},
+    {n:'Mo Farah', v:58, tag:'athlete'},
+    {n:'Usain Bolt', v:94, tag:'athlete'},
+    {n:'Eddie Hall at his heaviest', v:196, tag:'athlete', note:'roughly', check:true},
+    {n:'Formula 1 car', v:798, tag:'thing', note:'2023 minimum weight'},
+    {n:'Smart Fortwo', v:900, tag:'thing', note:'roughly'},
+    {n:'Original Mini', v:617, tag:'thing', note:'1959, roughly', check:true},
+    {n:'Airline checked bag allowance', v:23, tag:'thing', note:'typical'},
+    {n:'Curling stone', v:19, tag:'thing'},
+    {n:'Men’s discus', v:2, tag:'thing'},
+    {n:'Men’s javelin', v:0.8, tag:'thing'},
+    {n:'Racehorse', v:500, tag:'animal', note:'typical thoroughbred'},
+    {n:'Shetland pony', v:200, tag:'animal', note:'typical'},
+    {n:'Male grizzly bear', v:270, tag:'animal', note:'typical'},
+    {n:'Male ostrich', v:115, tag:'animal', note:'typical'},
+    {n:'Emperor penguin', v:30, tag:'animal', note:'typical'},
+    {n:'Great Dane', v:65, tag:'animal', note:'typical male'},
+    {n:'Chihuahua', v:2.5, tag:'animal', note:'typical'},
+    {n:'House cat', v:4.5, tag:'animal', note:'typical'},
+    {n:'Mute swan', v:11, tag:'animal', note:'typical male'},
+    {n:'Male giraffe', v:1200, tag:'animal', note:'typical'},
+    {n:'Male hippo', v:1500, tag:'animal', note:'typical'},
+    {n:'White rhino', v:2300, tag:'animal', note:'typical male'},
+    {n:'African bull elephant', v:6000, tag:'animal', note:'typical'},
   ]},
 ];
 
@@ -200,6 +271,7 @@ function shuffle(arr,rng){ const a=arr.slice(); for(let i=a.length-1;i>0;i--){ c
 const dstr = d => `${d.getFullYear()}-${pad(d.getMonth()+1)}-${pad(d.getDate())}`;
 const today = () => Math.round((Date.parse(dstr(new Date())+'T00:00:00Z') - Date.parse(CONFIG.launch+'T00:00:00Z'))/864e5)+1;
 const decimals = v => (String(v).split('.')[1]||'').length;
+const mid = name => name.replace(/^(An?|Your) /, m => m.toLowerCase());   // 'An hour of yoga' reads as 'an hour of yoga' mid-sentence
 const fmt = (v,dp=decimals(v)) => Number(v).toLocaleString(undefined,{minimumFractionDigits:dp,maximumFractionDigits:dp});
 
 // ---------- the daily chain ----------
@@ -286,7 +358,7 @@ function card(){
   shell(`<div class="q"><div class="qhead"><span class="eyebrow">Card ${i+1} of ${CONFIG.rounds} · ${esc(session.deck.name)}</span><span class="clock" id="clock" aria-label="Time left"></span></div>
     <div class="timer" id="timer"><i></i></div>
     ${cardHtml(a,'ref',true)}
-    <p class="ask-q" id="vs" aria-live="polite">${session.deck.ask(esc(b.n), esc(a.n))}</p>
+    <p class="ask-q" id="vs" aria-live="polite">${session.deck.ask(mid(esc(b.n)), mid(esc(a.n)))}</p>
     ${cardHtml(b,'ask',false)}
     <div class="spacer"></div>
     <div class="pair"><button class="btn" id="hi">▲ ${esc(session.deck.btn[0])}</button><button class="btn" id="lo">▼ ${esc(session.deck.btn[1])}</button></div></div>`, dots());
